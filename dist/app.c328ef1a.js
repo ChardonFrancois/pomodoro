@@ -29670,10 +29670,12 @@ function BreakInterval(props) {
   return /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h4", null, "Break Interval"), /*#__PURE__*/_react.default.createElement("section", {
     className: "interval-container"
   }, /*#__PURE__*/_react.default.createElement("button", {
+    disabled: props.isPlay === true ? "disabled" : "",
     onClick: decreaseCounter
   }, "Down"), /*#__PURE__*/_react.default.createElement("p", {
     className: "interval-length"
   }, props.breakInterval), /*#__PURE__*/_react.default.createElement("button", {
+    disabled: props.isPlay === true ? "disabled" : "",
     onClick: increaseCounter
   }, "Up")));
 }
@@ -29712,10 +29714,12 @@ function SessionInterval(props) {
   return /*#__PURE__*/_react.default.createElement("section", null, /*#__PURE__*/_react.default.createElement("h4", null, "Session Length"), /*#__PURE__*/_react.default.createElement("section", {
     className: "interval-container"
   }, /*#__PURE__*/_react.default.createElement("button", {
+    disabled: props.isPlay === true ? "disabled" : "",
     onClick: decreaseSession
   }, "Down"), /*#__PURE__*/_react.default.createElement("p", {
     className: "interval-length"
   }, props.sessionInterval), /*#__PURE__*/_react.default.createElement("button", {
+    disabled: props.isPlay === true ? "disabled" : "",
     onClick: increaseSession
   }, "Up")));
 }
@@ -29775,6 +29779,7 @@ var Timer = /*#__PURE__*/function (_React$Component) {
     _this.playTimer = _this.playTimer.bind(_assertThisInitialized(_this));
     _this.stopTimer = _this.stopTimer.bind(_assertThisInitialized(_this));
     _this.decreaseTimer = _this.decreaseTimer.bind(_assertThisInitialized(_this));
+    _this.resetTimer = _this.resetTimer.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -29782,6 +29787,7 @@ var Timer = /*#__PURE__*/function (_React$Component) {
     key: "playTimer",
     value: function playTimer() {
       var intervalId = setInterval(this.decreaseTimer, 1000);
+      this.props.onPlayStopTimer(true);
       this.setState({
         intervalId: intervalId
       });
@@ -29791,10 +29797,25 @@ var Timer = /*#__PURE__*/function (_React$Component) {
     value: function decreaseTimer() {
       switch (this.state.timerSecond) {
         case 0:
-          this.props.updateTimerMinute();
-          this.setState({
-            timerSecond: 59
-          });
+          if (this.props.timerMinute === 0) {
+            if (this.state.isSession) {
+              this.setState({
+                isSession: false
+              });
+              this.props.toggleInterval(this.state.isSession);
+            } else {
+              this.setState({
+                isSession: true
+              });
+              this.props.toggleInterval(this.state.isSession);
+            }
+          } else {
+            this.props.updateTimerMinute();
+            this.setState({
+              timerSecond: 59
+            });
+          }
+
           break;
 
         default:
@@ -29810,6 +29831,18 @@ var Timer = /*#__PURE__*/function (_React$Component) {
     key: "stopTimer",
     value: function stopTimer() {
       clearInterval(this.state.intervalId);
+      this.props.onPlayStopTimer(false);
+    }
+  }, {
+    key: "resetTimer",
+    value: function resetTimer() {
+      this.stopTimer();
+      this.props.resetTimer();
+      this.props.onPlayStopTimer(false);
+      this.setState({
+        timerSecond: 0,
+        isSession: true
+      });
     }
   }, {
     key: "render",
@@ -29829,7 +29862,7 @@ var Timer = /*#__PURE__*/function (_React$Component) {
       }, "Play"), /*#__PURE__*/_react.default.createElement("button", {
         onClick: this.stopTimer
       }, "Stop"), /*#__PURE__*/_react.default.createElement("button", {
-        onClick: this.refreshTimer
+        onClick: this.resetTimer
       }, "Refresh")));
     }
   }]);
@@ -29895,7 +29928,8 @@ var Appli = /*#__PURE__*/function (_React$Component) {
     _this.state = {
       breakLength: 5,
       sessionLength: 25,
-      timerMinute: 25
+      timerMinute: 25,
+      isPlay: false
     };
     _this.onIncreaseBreakLength = _this.onIncreaseBreakLength.bind(_assertThisInitialized(_this));
     _this.onDecreaseBreakLength = _this.onDecreaseBreakLength.bind(_assertThisInitialized(_this));
@@ -29903,6 +29937,8 @@ var Appli = /*#__PURE__*/function (_React$Component) {
     _this.onDecreaseSessionLength = _this.onDecreaseSessionLength.bind(_assertThisInitialized(_this));
     _this.onToggleInterval = _this.onToggleInterval.bind(_assertThisInitialized(_this));
     _this.onUpdateTimerMinute = _this.onUpdateTimerMinute.bind(_assertThisInitialized(_this));
+    _this.onResetTimer = _this.onResetTimer.bind(_assertThisInitialized(_this));
+    _this.onPlayStopTimer = _this.onPlayStopTimer.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -29965,15 +30001,31 @@ var Appli = /*#__PURE__*/function (_React$Component) {
       });
     }
   }, {
+    key: "onResetTimer",
+    value: function onResetTimer() {
+      this.setState({
+        timerMinute: this.state.sessionLength
+      });
+    }
+  }, {
+    key: "onPlayStopTimer",
+    value: function onPlayStopTimer(isPlay) {
+      this.setState({
+        isPlay: isPlay
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/_react.default.createElement("main", null, /*#__PURE__*/_react.default.createElement("h2", null, "Pomodoro Clock"), /*#__PURE__*/_react.default.createElement("section", {
         className: "interval-length-container"
       }, /*#__PURE__*/_react.default.createElement(_BreakInterval.default, {
+        isPlay: this.state.isPlay,
         breakInterval: this.state.breakLength,
         increaseBreak: this.onIncreaseBreakLength,
         decreaseBreak: this.onDecreaseBreakLength
       }), /*#__PURE__*/_react.default.createElement(_SessionInterval.default, {
+        isPlay: this.state.isPlay,
         sessionInterval: this.state.sessionLength,
         increaseSession: this.onIncreaseSessionLength,
         decreaseSession: this.onDecreaseSessionLength
@@ -29981,7 +30033,9 @@ var Appli = /*#__PURE__*/function (_React$Component) {
         timerMinute: this.state.timerMinute,
         breakLength: this.state.breakLength,
         updateTimerMinute: this.onUpdateTimerMinute,
-        toggleInterval: this.onToggleInterval
+        toggleInterval: this.onToggleInterval,
+        resetTimer: this.onResetTimer,
+        onPlayStopTimer: this.onPlayStopTimer
       }));
     }
   }]);

@@ -11,7 +11,8 @@ class Appli extends React.Component{
         this.state ={
             breakLength: 5, 
             sessionLength: 25,
-            timerMinute: 25
+            timerMinute: 25,
+            isPlay: false
         };
         this.onIncreaseBreakLength = this.onIncreaseBreakLength.bind(this);
         this.onDecreaseBreakLength = this.onDecreaseBreakLength.bind(this);
@@ -19,6 +20,8 @@ class Appli extends React.Component{
         this.onDecreaseSessionLength = this.onDecreaseSessionLength.bind(this);
         this.onToggleInterval = this.onToggleInterval.bind(this);
         this.onUpdateTimerMinute = this.onUpdateTimerMinute.bind(this);
+        this.onResetTimer = this.onResetTimer.bind(this);
+        this.onPlayStopTimer = this.onPlayStopTimer.bind(this);
     }
     onIncreaseBreakLength(){
         this.setState((prevState)=>{
@@ -69,20 +72,38 @@ class Appli extends React.Component{
         
     }
 
+    onResetTimer(){
+        this.setState({
+            timerMinute: this.state.sessionLength
+        })
+    }
+
+    onPlayStopTimer(isPlay){
+        this.setState({
+            isPlay: isPlay
+        })
+    }
+
     render(){
         return(
             <main>
                 
                     <h2>Pomodoro Clock</h2>
                     <section className="interval-length-container">
-                    <BreakInterval breakInterval={this.state.breakLength} increaseBreak={this.onIncreaseBreakLength} decreaseBreak={this.onDecreaseBreakLength}/>
-                    <SessionInterval sessionInterval={this.state.sessionLength}
+                    <BreakInterval
+                    isPlay={this.state.isPlay}
+                    breakInterval={this.state.breakLength} increaseBreak={this.onIncreaseBreakLength} decreaseBreak={this.onDecreaseBreakLength}/>
+                    <SessionInterval
+                    isPlay={this.state.isPlay}
+                    sessionInterval={this.state.sessionLength}
                     increaseSession={this.onIncreaseSessionLength}
                     decreaseSession={this.onDecreaseSessionLength}/>
                     </section>
                     <Timer timerMinute={this.state.timerMinute} breakLength={this.state.breakLength}
                     updateTimerMinute={this.onUpdateTimerMinute}
-                    toggleInterval={this.onToggleInterval}/>
+                    toggleInterval={this.onToggleInterval}
+                    resetTimer={this.onResetTimer}
+                    onPlayStopTimer={this.onPlayStopTimer}/>
             </main>
         );
     }
