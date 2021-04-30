@@ -2,13 +2,13 @@ import React from 'react';
 
 function SessionInterval(props){
 function increaseSession(){
-    if(props.sessionLenght === 60){
+    if(props.sessionInterval === 60){
         return;
     }
     props.increaseSession();
 }
 function decreaseSession(){
-    if(props.sessionLenght === 1){
+    if(props.sessionInterval === 1){
         return;
     }
     props.decreaseSession();

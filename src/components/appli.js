@@ -99,7 +99,8 @@ class Appli extends React.Component{
                     increaseSession={this.onIncreaseSessionLength}
                     decreaseSession={this.onDecreaseSessionLength}/>
                     </section>
-                    <Timer timerMinute={this.state.timerMinute} breakLength={this.state.breakLength}
+                    <Timer timerMinute={this.state.timerMinute}
+                    breakInterval={this.state.breakLength}
                     updateTimerMinute={this.onUpdateTimerMinute}
                     toggleInterval={this.onToggleInterval}
                     resetTimer={this.onResetTimer}

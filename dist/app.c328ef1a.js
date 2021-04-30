@@ -29696,7 +29696,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function SessionInterval(props) {
   function increaseSession() {
-    if (props.sessionLenght === 60) {
+    if (props.sessionInterval === 60) {
       return;
     }
 
@@ -29704,7 +29704,7 @@ function SessionInterval(props) {
   }
 
   function decreaseSession() {
-    if (props.sessionLenght === 1) {
+    if (props.sessionInterval === 1) {
       return;
     }
 
@@ -30031,7 +30031,7 @@ var Appli = /*#__PURE__*/function (_React$Component) {
         decreaseSession: this.onDecreaseSessionLength
       })), /*#__PURE__*/_react.default.createElement(_Timer.default, {
         timerMinute: this.state.timerMinute,
-        breakLength: this.state.breakLength,
+        breakInterval: this.state.breakLength,
         updateTimerMinute: this.onUpdateTimerMinute,
         toggleInterval: this.onToggleInterval,
         resetTimer: this.onResetTimer,
@@ -30085,7 +30085,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49775" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52239" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
